@@ -9,6 +9,7 @@ No pandas, no Spark: DuckDB executes the same .sql files a reader can audit.
 from __future__ import annotations
 
 import csv
+import hashlib
 import threading
 from datetime import date, datetime
 from decimal import Decimal
@@ -40,6 +41,54 @@ RAW_MATCHES_COLUMNS = {
 
 NON_BOWLER_DISMISSALS = ("run out", "retired hurt", "retired out",
                          "obstructing the field")
+
+# The dataset is a Kaggle download and is not committed, so it is pinned by
+# content rather than by link: a URL can be edited or silently repointed,
+# an MD5 cannot. These are the exact files every published figure was
+# computed from. A different dataset is not an error, but the row counts,
+# season labels and quirks documented in docs/DATA.md then do not apply,
+# so a mismatch is reported rather than ignored.
+DATASET_FINGERPRINTS = {
+    DELIVERIES_FILENAME: "a81f1880e7b9b1f440f0005db00f6d4d",
+    MATCHES_FILENAME: "c083503466c5c73501ff2987b74099e7",
+}
+
+
+def file_md5(path: Path) -> str:
+    """MD5 of a file, read in chunks so a 21 MB CSV is never held in memory."""
+    digest = hashlib.md5()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1 << 20), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def verify_fingerprints() -> list[dict]:
+    """Compare each dataset file against its recorded MD5.
+
+    Returns one result per file. ``matches`` is False when the checksum
+    differs or the file is absent; ``expected`` is None when the file has
+    no recorded fingerprint, which is treated as a match.
+    """
+    results: list[dict] = []
+    for filename, expected in DATASET_FINGERPRINTS.items():
+        path = data_dir() / filename
+        if not path.is_file():
+            results.append({"file": filename, "expected": expected,
+                            "actual": None, "matches": False,
+                            "detail": "file not found"})
+            continue
+        actual = file_md5(path)
+        results.append({
+            "file": filename,
+            "expected": expected,
+            "actual": actual,
+            "matches": actual == expected,
+            "detail": "checksum matches" if actual == expected
+                      else "different dataset: the documented row counts, "
+                           "season labels and quirks do not apply",
+        })
+    return results
 
 
 class DataError(RuntimeError):

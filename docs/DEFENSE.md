@@ -16,6 +16,8 @@ file, a test, or a disclosed limitation.
 | "You credit bowlers for run outs." | Bowlers are credited only when the dismissal method is recorded and is not a run out, retired hurt, retired out or obstructing the field | `test_bowler_is_never_credited_for_a_non_bowler_dismissal` |
 | "Why 18 seasons when the calendar shows 19?" | The dataset labels IPL 2008 as `2007` and folds 2010 into `2009`. The app uses the dataset's own `season` column; deliveries inherit it from their match row, so a match can never split across seasons | [DATA.md](DATA.md) |
 | "Which teams is this biased toward?" | None — every team, including defunct franchises, is derived from the fixtures table. The only hand-written team names are brand colours for the UI, and that file is the single exemption the test allows | [teams.js](../frontend/src/theme/teams.js) |
+| "Where did the data come from?" | A Kaggle download, not committed, and pinned by **MD5 checksum rather than by link** — a URL can be edited or silently repointed, a checksum cannot. Preflight verifies both files before anything starts, and a mismatch is reported rather than ignored, because every documented row count and quirk describes these exact files | `preflight.py`, `DATASET_FINGERPRINTS`, `test_the_real_dataset_matches_its_recorded_fingerprints`, `test_a_tampered_file_is_detected` |
+| "Can I trust a different copy of the dataset?" | You can check it yourself in one command. If the checksum differs, you are looking at a different dataset and the documented figures do not apply | `md5sum data/raw/*.csv` |
 
 ## Scoring
 
@@ -42,7 +44,7 @@ file, a test, or a disclosed limitation.
 
 | Objection | Answer | Proof |
 |---|---|---|
-| "There are no tests." | 63 tests across 9 files: schema, invariants, independent recomputation, no-hardcoding, interface copy, API surface, scoring, XI, harness | `cd backend && python -m pytest -q` |
+| "There are no tests." | 68 tests across 10 files: schema, invariants, independent recomputation, no-hardcoding, interface copy, dataset fingerprint, API surface, scoring, XI, harness | `cd backend && python -m pytest -q` |
 | "Why DuckDB instead of Spark/pandas?" | 21 MB of CSV is answered in 1–80 ms by an in-process columnar engine. Adding Spark would mean a 350 MB dependency, a JVM, and startup cost for no gain. The SQL is portable enough to add one later | [ARCHITECTURE.md](ARCHITECTURE.md) |
 | "Why no database?" | Read-only analytical serving. The warehouse is a single file, rebuilt automatically when inputs change, with the rebuild visible in `/api/health` | `GET /api/health` |
 | "Isn't that cached data?" | Yes — deliberately, and observably: `rebuilt_on_boot` and `warehouse_built_at` are reported, and the fingerprint covers every CSV and every `.sql` file | `preflight.py --rebuild` |

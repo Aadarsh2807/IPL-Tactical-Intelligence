@@ -1,5 +1,33 @@
 # Data: what is in the files, and what had to be derived
 
+## Where the data comes from
+
+The two CSVs are a **Kaggle** dataset, downloaded once and committed nowhere. They are
+gitignored because the deliveries file is 21 MB, and no dataset of this kind should be
+re-hosted inside an application repository.
+
+Because the files are not committed, this project pins them by content rather than by
+link. These are MD5 checksums of the exact files every figure in the app was computed from:
+
+| File | MD5 | Size |
+|---|---|---|
+| `ipl_deliveries_clean.csv` | `a81f1880e7b9b1f440f0005db00f6d4d` | 22,236,812 bytes |
+| `ipl_matches_clean.csv` | `c083503466c5c73501ff2987b74099e7` | 196,355 bytes |
+
+Check yours before trusting a number this project publishes:
+
+```bash
+md5sum data/raw/ipl_deliveries_clean.csv data/raw/ipl_matches_clean.csv
+```
+
+If either checksum differs, you are looking at a different dataset and the row counts,
+season labels and quirks described below will not apply. Content addressing is used in
+preference to a URL on purpose: a link can be edited or silently repointed, a checksum
+cannot.
+
+Nothing in this project is downloaded at runtime, and no figure comes from any source
+other than these two files.
+
 ## Source files
 
 Two CSVs, both read-only, both gitignored (`data/raw/`):

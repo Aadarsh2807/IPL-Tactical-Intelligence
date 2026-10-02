@@ -30,6 +30,11 @@ def report(ok: bool, label: str, detail: str = "") -> None:
         failures.append(label)
 
 
+def warn(label: str, detail: str = "") -> None:
+    """Something worth knowing that should not block the app starting."""
+    print(f"[~~] {label}{f' — {detail}' if detail else ''}")
+
+
 def venv_python() -> Path:
     """Project virtualenv interpreter, if one exists (Windows or POSIX)."""
     venv = PROJECT_DIR / "backend" / ".venv"
@@ -72,6 +77,23 @@ def check_data() -> None:
     report(source["ok"], "source columns", "; ".join(source["problems"]) or
            f"{len(source['deliveries_columns'])} delivery / "
            f"{len(source['matches_columns'])} match columns")
+
+    check_fingerprints()
+
+
+def check_fingerprints() -> None:
+    """Prove the files are the ones every published figure was computed from."""
+    import dataset
+
+    for result in dataset.verify_fingerprints():
+        if result["matches"]:
+            report(True, f"fingerprint {result['file']}", result["actual"])
+        else:
+            # Not fatal: running a different dataset is legitimate, but the
+            # row counts and quirks in docs/DATA.md then do not describe it.
+            warn(f"fingerprint {result['file']}",
+                 f"expected {result['expected']}, got {result['actual']}; "
+                 f"{result['detail']}")
 
 
 def check_warehouse(rebuild: bool) -> None:

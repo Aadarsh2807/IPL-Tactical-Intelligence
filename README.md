@@ -110,16 +110,28 @@ python scripts/preflight.py          # add backend/.venv/Scripts/python.exe on W
 
 ### 1. Dataset
 
-Place the two files in `data/raw/` (already populated in this checkout, gitignored because
-the delivery file is 21 MB):
+The two files are a **Kaggle** download. They are not committed here, because the deliveries
+file is 21 MB and a dataset of this kind does not belong inside an application repository.
+Download them from Kaggle and place them in `data/raw/`:
 
 ```text
 data/raw/ipl_deliveries_clean.csv
 data/raw/ipl_matches_clean.csv
 ```
 
-Point somewhere else with `IPL_DATA_DIR`. See [docs/DATA.md](docs/DATA.md) for the schema
-and every derived column.
+Because the files are not committed, this project pins them by **content, not by link** — a
+URL can be edited or silently repointed, a checksum cannot. These are the MD5s of the exact
+files every published figure was computed from:
+
+| File | MD5 |
+|---|---|
+| `ipl_deliveries_clean.csv` | `a81f1880e7b9b1f440f0005db00f6d4d` |
+| `ipl_matches_clean.csv` | `c083503466c5c73501ff2987b74099e7` |
+
+`python scripts/preflight.py` verifies both before anything starts, and a mismatch is
+reported rather than ignored, because the row counts, season labels and dataset quirks in
+[docs/DATA.md](docs/DATA.md) describe these files specifically. Point somewhere else with
+`IPL_DATA_DIR`.
 
 ### 2. Backend
 
