@@ -2,9 +2,13 @@
 
 ## Where the data comes from
 
-The two CSVs are a **Kaggle** dataset, downloaded once and committed nowhere. They are
-gitignored because the deliveries file is 21 MB, and no dataset of this kind should be
-re-hosted inside an application repository.
+The two CSVs come from [**IPL Dataset**](https://www.kaggle.com/datasets/chaitu20/ipl-dataset2008-2025)
+on Kaggle, published under **CC0 (public domain)**. That licence permits redistribution with
+no conditions, which is why this project is able to mirror them on its own GitHub Release
+rather than asking every reader to fetch them from Kaggle by hand.
+
+They are gitignored because the deliveries file is 21 MB, and no dataset of this kind
+should be re-hosted inside an application repository's history.
 
 Because the files are not committed, this project pins them by content rather than by
 link. These are MD5 checksums of the exact files every figure in the app was computed from:
@@ -17,7 +21,7 @@ link. These are MD5 checksums of the exact files every figure in the app was com
 Check yours before trusting a number this project publishes:
 
 ```bash
-md5sum data/raw/ipl_deliveries_clean.csv data/raw/ipl_matches_clean.csv
+python scripts/fetch_data.py --check     # or: md5sum data/raw/*.csv
 ```
 
 If either checksum differs, you are looking at a different dataset and the row counts,

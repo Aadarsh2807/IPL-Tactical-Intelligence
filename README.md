@@ -105,19 +105,24 @@ aggregates, which is why it can be explained, tested and reproduced.
 Requires Python 3.10+ and Node 18+. First check everything with:
 
 ```bash
-python scripts/preflight.py          # add backend/.venv/Scripts/python.exe on Windows
+python scripts/fetch_data.py         # add backend/.venv/Scripts/python.exe on Windows
+python scripts/preflight.py
 ```
 
 ### 1. Dataset
 
-The two files are a **Kaggle** download. They are not committed here, because the deliveries
-file is 21 MB and a dataset of this kind does not belong inside an application repository.
-Download them from Kaggle and place them in `data/raw/`:
+The two files are **CC0 (public domain)**, from
+[IPL Dataset on Kaggle](https://www.kaggle.com/datasets/chaitu20/ipl-dataset2008-2025).
+They are not committed here, because the deliveries file is 21 MB and a dataset of this
+kind does not belong inside an application repository. Fetch them with one command:
 
-```text
-data/raw/ipl_deliveries_clean.csv
-data/raw/ipl_matches_clean.csv
+```bash
+python scripts/fetch_data.py
 ```
+
+It downloads both files from this project's GitHub Release into `data/raw/` and verifies
+each one against the checksum below. If the release is unavailable it prints the Kaggle
+link so you can download them by hand instead.
 
 Because the files are not committed, this project pins them by **content, not by link** — a
 URL can be edited or silently repointed, a checksum cannot. These are the MD5s of the exact
@@ -241,7 +246,7 @@ Subagents, harness and AI harnessing explained: [docs/AGENTS.md](docs/AGENTS.md)
 
 | Document | Contents |
 |---|---|
-| [docs/DATA.md](docs/DATA.md) | Source schema, every derived column, join and row-count evidence |
+| [docs/DATA.md](docs/DATA.md) | Source schema, licence, every derived column, join and row-count evidence |
 | [docs/SCORING.md](docs/SCORING.md) | Every threshold, weight and formula, with the reasoning |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Layers, warehouse lifecycle, performance, extension points |
 | [docs/AGENTS.md](docs/AGENTS.md) | Subagents, harness, verifier, and where an LLM would plug in |
