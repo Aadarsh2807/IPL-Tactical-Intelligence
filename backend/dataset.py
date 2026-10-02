@@ -314,8 +314,8 @@ class Warehouse:
             "legal_balls": "assumed (source CSV has no extras_type column)",
             "bowler_runs": "approximate (runs_total; byes and leg-byes not separable)",
             "super_overs": "innings > 2 excluded from every aggregate",
-            "dismissal_credit": "bowler credited only for: "
-                                + ", ".join(NON_BOWLER_DISMISSALS) + " excluded",
+            "dismissal_credit": "bowler credited except for: "
+                                + ", ".join(NON_BOWLER_DISMISSALS),
             **counts,
         }
         return connection, provenance
