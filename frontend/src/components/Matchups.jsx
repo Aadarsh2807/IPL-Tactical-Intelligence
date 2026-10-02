@@ -3,8 +3,6 @@ import { useResource, encode } from '../lib/api'
 import { Panel, Metric, Meter, Chip, Loading, ErrorState, EmptyState, Field, Takeaway, selectClass } from './ui'
 import { matchupSentence, fmt, oneDp } from '../lib/format'
 
-const EVIDENCE_ORDER = { Limited: 0, Medium: 1, High: 2 }
-
 export default function Matchups({ season }) {
   const [batter, setBatter] = useState('')
   const [bowler, setBowler] = useState('')
@@ -84,13 +82,13 @@ export default function Matchups({ season }) {
                 label="How much we know about this matchup"
                 value={Math.min(data.balls, 60)}
                 max={60}
-                suffix=" balls · 30+ counts as strong evidence"
+                suffix=" balls · 30 or more counts as strong evidence"
               />
             </div>
 
             <p className="mt-4 border-t border-line pt-3 text-xs text-ink-faint">
-              Evidence tier {EVIDENCE_ORDER[data.evidence]} of 3 is derived only from balls
-              faced, so a small sample is never dressed up as a pattern.
+              The grade above counts only balls these two have faced each other, so a
+              small sample is never dressed up as a pattern.
             </p>
           </Panel>
         </>
