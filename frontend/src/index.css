@@ -1,7 +1,191 @@
 @import "tailwindcss";
 
+/* ---------------------------------------------------------------------------
+   Design tokens. One accent colour is injected per team at runtime
+   (--accent), which is why the interface looks like a car livery rather than
+   a generic dashboard.
+   --------------------------------------------------------------------------- */
+@theme {
+  --color-pit: #0b0d0f;
+  --color-panel: #111417;
+  --color-panel-2: #15191d;
+  --color-line: #1e2429;
+  --color-line-strong: #2f3940;
+  --color-ink: #e8ecef;
+  --color-ink-dim: #98a3ac;
+  --color-ink-faint: #636e78;
+  --color-up: #4ade80;
+  --color-down: #f87171;
+
+  /* Three faces, chosen from what is already on the machine: a serif for
+     editorial headings, the system sans for prose, and mono for every figure.
+     No webfont is fetched, so the type costs no request and no layout shift. */
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua",
+                  Georgia, "Times New Roman", serif;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+               "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", "Roboto Mono", Menlo, monospace;
+}
+
+:root {
+  --accent: #7c8894;
+  --accent-ink: #0b0d0f;
+}
+
 @layer base {
+  html {
+    color-scheme: dark;
+  }
+
   body {
-    @apply bg-slate-900 text-slate-100 antialiased overflow-x-hidden;
+    @apply bg-pit text-ink antialiased overflow-x-hidden;
+    font-feature-settings: "tnum" 1, "cv05" 1;
+  }
+
+  /* Hairline diagonal texture: a pitch-side reference grid, kept at 2% so it
+     never competes with the data. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image: linear-gradient(90deg, #ffffff05 1px, transparent 1px);
+    background-size: 72px 72px;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  select option {
+    background: #15191d;
+    color: #e8ecef;
+  }
+}
+
+@layer components {
+  .label {
+    @apply text-[10px] uppercase tracking-[0.18em] text-ink-faint;
+  }
+
+  .figure {
+    @apply font-mono tabular-nums;
+  }
+
+  /* ---------------------------------------------------------------------
+     Type scale. A report needs a reader's eye to know what to read first,
+     so the sizes are far apart rather than evenly stepped: the lead figure
+     is unmissable, section titles are a different voice entirely, and
+     micro-labels stay out of the way.
+     --------------------------------------------------------------------- */
+
+  /* Masthead figure: the one number the page is about. */
+  .display-figure {
+    @apply font-mono tabular-nums;
+    font-size: clamp(4rem, 11vw, 7.5rem);
+    line-height: 0.82;
+    letter-spacing: -0.045em;
+    font-weight: 500;
+  }
+
+  /* Section titles: serif, so they read as editorial rather than dashboard. */
+  .display-title {
+    @apply font-display;
+    font-size: clamp(1.35rem, 2.6vw, 1.85rem);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+  }
+
+  /* The judgement line under a section title. */
+  .display-sub {
+    @apply font-display italic;
+    font-size: 1.05rem;
+    line-height: 1.35;
+    color: var(--color-ink-dim);
+  }
+
+  /* Insight headline inside a card. */
+  .card-title {
+    @apply font-display;
+    font-size: 1.2rem;
+    line-height: 1.22;
+    letter-spacing: -0.01em;
+  }
+
+  /* Lede paragraph under the masthead: the biggest running prose on the page. */
+  .lede {
+    @apply font-sans text-ink;
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
+    line-height: 1.65;
+  }
+
+  /* Body copy inside an insight card. */
+  .copy {
+    @apply font-sans text-ink-dim;
+    font-size: 0.875rem;
+    line-height: 1.72;
+  }
+
+  /* Kicker: the smallest type on the page, and the only letter-spaced serif. */
+  .kicker {
+    @apply font-sans uppercase text-ink-faint;
+    font-size: 9.5px;
+    letter-spacing: 0.22em;
+    font-weight: 500;
+  }
+
+  /* Team-coloured glow down both edges. --accent is set by the selected club's
+     livery, so the whole frame changes colour with the team selector. */
+  .glow-edges::before,
+  .glow-edges::after {
+    content: "";
+    position: fixed;
+    top: -10%;
+    bottom: -10%;
+    width: 300px;
+    z-index: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse 55% 60% at center,
+      color-mix(in srgb, var(--accent) 24%, transparent) 0%,
+      color-mix(in srgb, var(--accent) 7%, transparent) 45%,
+      transparent 72%
+    );
+    filter: blur(30px);
+  }
+
+  .glow-edges::before { left: -160px; }
+  .glow-edges::after  { right: -160px; }
+
+  /* The glow must never make body text harder to read. */
+  @media (max-width: 900px) {
+    .glow-edges::before,
+    .glow-edges::after { opacity: 0.45; width: 200px; }
+  }
+
+  /* Loading state: a breathing hairline, not a spinner. */
+  .skeleton {
+    @apply bg-line;
+    animation: breathe 1.6s ease-in-out infinite;
+  }
+
+  @keyframes breathe {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.65; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
