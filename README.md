@@ -2,9 +2,17 @@
 
 ![CI](https://github.com/Aadarsh2807/IPL-Tactical-Intelligence/actions/workflows/ci.yml/badge.svg)
 
+**68 tests on every push** · **295,732 deliveries, 1,243 matches** · **no pandas, no Spark, no ML model** ·
+**every number traceable to the SQL that produced it**
+
 **Season squad analysis, role-adaptive player stability, XI building and recorded head-to-head matchups — computed entirely from IPL ball-by-ball deliveries in SQL.**
 
 > The claim this project has to survive is "every number came from the data". So every figure is auditable: `GET /api/sql/{name}` returns the exact SQL behind it, `GET /api/health` returns the dataset's provenance and its disclosed approximations, and a test mechanically proves no player or team name is written in application code.
+
+![The squad view for Chennai Super Kings, 2026](docs/images/squad.png)
+
+*Chennai Super Kings, 2026. The API returns `attack_index: 0.968`; the page says "3% below the
+league average". Bars support the sentence, they never replace it.*
 
 ---
 
