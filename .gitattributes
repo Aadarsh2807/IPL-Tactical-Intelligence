@@ -1,0 +1,18 @@
+# Normalize line endings in the repository so a Windows checkout does not
+# rewrite every file as modified on each commit.
+* text=auto eol=lf
+
+*.sql text eol=lf
+*.py text eol=lf
+*.jsx text eol=lf
+*.js text eol=lf
+*.css text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.svg text eol=lf
+
+# Never normalize these.
+data/raw/** binary
+data/*.duckdb binary
+frontend/public/*.png binary
+frontend/public/*.jpg binary

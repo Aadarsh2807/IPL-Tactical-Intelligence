@@ -1,5 +1,11 @@
 frontend/node_modules/
+frontend/dist/
 backend/.venv/
-backend/__pycache__/
-data/IPL.csv
+__pycache__/
+*.pyc
+.pytest_cache/
+data/raw/
+data/cricsheet/
+data/*.duckdb
+.freebuff/
 .DS_Store
