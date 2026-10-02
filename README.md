@@ -1,5 +1,7 @@
 # IPL Tactical Intelligence
 
+![CI](https://github.com/Aadarsh2807/IPL-Tactical-Intelligence/actions/workflows/ci.yml/badge.svg)
+
 **Season squad analysis, role-adaptive player stability, XI building and recorded head-to-head matchups — computed entirely from IPL ball-by-ball deliveries in SQL.**
 
 > The claim this project has to survive is "every number came from the data". So every figure is auditable: `GET /api/sql/{name}` returns the exact SQL behind it, `GET /api/health` returns the dataset's provenance and its disclosed approximations, and a test mechanically proves no player or team name is written in application code.

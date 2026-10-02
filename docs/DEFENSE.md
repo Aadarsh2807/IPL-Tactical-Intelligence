@@ -42,7 +42,7 @@ file, a test, or a disclosed limitation.
 
 | Objection | Answer | Proof |
 |---|---|---|
-| "There are no tests." | 60 tests across 8 files: schema, invariants, independent recomputation, no-hardcoding, API surface, scoring, XI, harness | `cd backend && python -m pytest -q` |
+| "There are no tests." | 63 tests across 9 files: schema, invariants, independent recomputation, no-hardcoding, interface copy, API surface, scoring, XI, harness | `cd backend && python -m pytest -q` |
 | "Why DuckDB instead of Spark/pandas?" | 21 MB of CSV is answered in 1–80 ms by an in-process columnar engine. Adding Spark would mean a 350 MB dependency, a JVM, and startup cost for no gain. The SQL is portable enough to add one later | [ARCHITECTURE.md](ARCHITECTURE.md) |
 | "Why no database?" | Read-only analytical serving. The warehouse is a single file, rebuilt automatically when inputs change, with the rebuild visible in `/api/health` | `GET /api/health` |
 | "Isn't that cached data?" | Yes — deliberately, and observably: `rebuilt_on_boot` and `warehouse_built_at` are reported, and the fingerprint covers every CSV and every `.sql` file | `preflight.py --rebuild` |
