@@ -126,8 +126,8 @@ export default function ReportPanel({ season, team }) {
                   <PillarBars items={verdict.chart} />
                 </div>
                 <p className="mt-5 border-t border-line pt-3 text-[11px] leading-relaxed text-ink-faint">
-                  The four parts add back to the figure on the left exactly, so nothing in
-                  the score is left unexplained.
+                  These {verdict.chart.length} bars add back to the figure on the left
+                  exactly, so nothing in the score is left unexplained.
                 </p>
               </div>
             </div>
